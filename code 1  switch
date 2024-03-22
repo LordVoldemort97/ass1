@@ -1,0 +1,248 @@
+#include <iostream>
+#include <cstring>
+
+class CharArray {
+private:
+    char* array;
+    int size;
+
+public:
+    static int max_size;
+
+    // Constructors
+    CharArray() {
+        array = nullptr;
+        size = 0;
+    }
+
+    CharArray(const char* str) {
+        size = strlen(str);
+        array = new char[size + 1];
+        strcpy(array, str);
+        updateMaxSize();
+    }
+
+    // Copy constructor
+    CharArray(const CharArray& other) {
+        size = other.size;
+        array = new char[size + 1];
+        strcpy(array, other.array);
+        updateMaxSize();
+    }
+
+    // Destructor
+    ~CharArray() {
+        delete[] array;
+    }
+
+    // Overloading operators
+    char& operator[](int index) {
+        return array[index];
+    }
+
+    CharArray operator++() {
+        CharArray result(array);
+        for (int i = 0; i < size; i++) {
+            array[i]++;
+        }
+        return result;
+    }
+
+    CharArray operator--(int) {
+        CharArray result(array);
+        for (int i = 0; i < size; i++) {
+            array[i]--;
+        }
+        return result;
+    }
+
+    CharArray operator+(const CharArray& other) {
+        CharArray result;
+        result.size = size + other.size;
+        result.array = new char[result.size + 1];
+        strcpy(result.array, array);
+        strcat(result.array, other.array);
+        result.updateMaxSize();
+        return result;
+    }
+
+    CharArray& operator=(const CharArray& other) {
+        if (this != &other) {
+            delete[] array;
+            size = other.size;
+            array = new char[size + 1];
+            strcpy(array, other.array);
+            updateMaxSize();
+        }
+        return *this;
+    }
+
+    CharArray operator*(int n) {
+        CharArray result;
+        result.size = size * n;
+        result.array = new char[result.size + 1];
+        for (int i = 0; i < n; i++) {
+            strcat(result.array, array);
+        }
+        result.updateMaxSize();
+        return result;
+    }
+
+    char First() const {
+        return array[0];
+    }
+
+    char Last() const {
+        return array[size - 1];
+    }
+
+    CharArray Reverse() const {
+        CharArray result;
+        result.size = size;
+        result.array = new char[result.size + 1];
+        for (int i = 0, j = size - 1; i < size; i++, j--) {
+            result.array[i] = array[j];
+        }
+        result.array[size] = '\0';
+        result.updateMaxSize();
+        return result;
+    }
+
+    int Length() const {
+        return size;
+    }
+
+    static void updateMaxSize() {
+        if (size > max_size) {
+            max_size = size;
+        }
+    }
+
+    static int getMaxSize() {
+        return max_size;
+    }
+};
+
+int CharArray::max_size = 0;
+
+int main() {
+    CharArray strings[10];
+    int choice;
+
+    do {
+        std::cout << "\n1- Add a new String\n"
+                  << "2- Copy a string to another\n"
+                  << "3- Concatenate 2 strings\n"
+                  << "4- Reverse a string\n"
+                  << "5- Find Length of the string\n"
+                  << "6- Get the largest string (with maximum size)\n"
+                  << "7- Get a character in string by index\n"
+                  << "8- Change a character in string by index\n"
+                  << "9- Get first and last character in string\n"
+                  << "10- Repeat the string for a number of times\n"
+                  << "11- Add 1 to string characters\n"
+                  << "12- Subtract 1 from string characters\n"
+                  << "13- Exit\n"
+                  << "Choice? ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                std::cout << "Enter String: ";
+                char str[100];
+                std::cin.ignore();
+                std::cin.getline(str, 100);
+                CharArray newString(str);
+                strings[CharArray::getMaxSize()] = newString;
+                std::cout << "String added\n";
+                break;
+            }
+            case 2: {
+                CharArray copy = strings[CharArray::getMaxSize()];
+                std::cout << "String copied to another. Copy String: " << copy << "\n";
+                break;
+            }
+            case 3: {
+                std::cout << "What string to concatenate?I apologize for the incomplete response. Here's the continuation of the code:
+
+```cpp
+                char str[100];
+                std::cin.ignore();
+                std::cin.getline(str, 100);
+                CharArray other(str);
+                CharArray result = strings[CharArray::getMaxSize()] + other;
+                std::cout << "Strings concatenated to a new string: " << result << "\n";
+                break;
+            }
+            case 4: {
+                CharArray reversed = strings[CharArray::getMaxSize()].Reverse();
+                std::cout << "String reversed: " << reversed << "\n";
+                break;
+            }
+            case 5: {
+                int length = strings[CharArray::getMaxSize()].Length();
+                std::cout << "Length of the string: " << length << "\n";
+                break;
+            }
+            case 6: {
+                int maxSize = CharArray::getMaxSize();
+                std::cout << "The largest string (with maximum size) is at index: " << maxSize << "\n";
+                std::cout << "String: " << strings[maxSize] << "\n";
+                break;
+            }
+            case 7: {
+                int index;
+                std::cout << "Enter the index: ";
+                std::cin >> index;
+                char character = strings[index][0];
+                std::cout << "Character at index " << index << ": " << character << "\n";
+                break;
+            }
+            case 8: {
+                int index;
+                char newChar;
+                std::cout << "Enter the index: ";
+                std::cin >> index;
+                std::cout << "Enter the new character: ";
+                std::cin >> newChar;
+                strings[index][0] = newChar;
+                std::cout << "Character at index " << index << " changed to: " << newChar << "\n";
+                break;
+            }
+            case 9: {
+                char firstChar = strings[CharArray::getMaxSize()].First();
+                char lastChar = strings[CharArray::getMaxSize()].Last();
+                std::cout << "First character: " << firstChar << "\n";
+                std::cout << "Last character: " << lastChar << "\n";
+                break;
+            }
+            case 10: {
+                int times;
+                std::cout << "Enter the number of times to repeat the string: ";
+                std::cin >> times;
+                CharArray repeated = strings[CharArray::getMaxSize()] * times;
+                std::cout << "Repeated string: " << repeated << "\n";
+                break;
+            }
+            case 11: {
+                CharArray incremented = ++strings[CharArray::getMaxSize()];
+                std::cout << "String with 1 added to each character: " << incremented << "\n";
+                break;
+            }
+            case 12: {
+                CharArray decremented = strings[CharArray::getMaxSize()]--;
+                std::cout << "String with 1 subtracted from each character: " << decremented << "\n";
+                break;
+            }
+            case 13: {
+                std::cout << "Goodbye\n";
+                break;
+            }
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+                break;
+        }
+    } while (choice != 13);
+
+    return 0;
+}
